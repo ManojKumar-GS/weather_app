@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/const/gradient_const.dart';
-
-import 'home_screen.dart';
+import 'package:weather_app/screens/base_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,7 +17,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Timer(const Duration(seconds: 2), () => Get.off(const HomeScreen()));
+    Timer(const Duration(seconds: 2), () => Get.off(const BasePage()));
     super.initState();
   }
 

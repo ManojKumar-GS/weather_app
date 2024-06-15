@@ -1,9 +1,9 @@
 class WeatherModel {
   String? name;
   String? base;
-  String? timeZone;
+  int? timeZone;
   Coordination? coordination;
-  Weather? weather;
+  List<Weather>? weather;
   Main? main;
   Wind? wind;
   System? system;
@@ -24,7 +24,8 @@ class WeatherModel {
       main: Main.fromJson(json['main']),
       system: System.fromJson(json['sys']),
       timeZone: json['timezone'],
-      weather: Weather.fromJson(json['weather']),
+      weather:
+          List<Weather>.from(json['weather'].map((x) => Weather.fromJson(x))),
       wind: Wind.fromJson(json['wind']),
       coordination: Coordination.fromJson(
         json['coord'],
@@ -54,12 +55,12 @@ class Weather {
 }
 
 class Main {
-  double? temp;
+  int? temp;
   double? feelsLike;
   double? tempMin;
   double? tempMax;
-  double? pressure;
-  double? humidity;
+  int? pressure;
+  int? humidity;
 
   Main(
       {this.feelsLike,
@@ -69,18 +70,18 @@ class Main {
       this.tempMax,
       this.tempMin});
   factory Main.fromJson(Map<String, dynamic> json) => Main(
-        feelsLike: json['temp'],
-        humidity: json["feels_like"],
-        pressure: json["temp_min"],
-        temp: json["temp_max"],
-        tempMax: json["pressure"],
-        tempMin: json["humidity"],
+        temp: json['temp'],
+        feelsLike: json["feels_like"],
+        tempMin: json["temp_min"],
+        tempMax: json["temp_max"],
+        pressure: json["pressure"],
+        humidity: json["humidity"],
       );
 }
 
 class Wind {
   double? speed;
-  double? deg;
+  int? deg;
 
   Wind({this.speed, this.deg});
   factory Wind.fromJson(Map<String, dynamic> json) =>

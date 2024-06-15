@@ -7,9 +7,18 @@ class GradientConst {
     Colors.grey,
     Colors.orangeAccent
   ];
+  static const List<Color> gradientCardColor = [
+    Colors.white54,
+    Colors.grey,
+  ];
   static Rx<LinearGradient> gradientBackground = const LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
           colors: GradientConst.gradientColor)
+      .obs;
+  static Rx<LinearGradient> gradientCardBackground = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: GradientConst.gradientCardColor)
       .obs;
 }
