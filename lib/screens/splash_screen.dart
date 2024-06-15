@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:weather_app/const/gradient_const.dart';
 
 import 'home_screen.dart';
 
@@ -16,10 +18,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Timer(
-        const Duration(seconds: 2),
-        () => Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen())));
+    Timer(const Duration(seconds: 2), () => Get.off(const HomeScreen()));
     super.initState();
   }
 
@@ -27,11 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [Colors.blueAccent, Colors.grey, Colors.orangeAccent])),
+        decoration:
+            BoxDecoration(gradient: GradientConst.gradientBackground.value),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
