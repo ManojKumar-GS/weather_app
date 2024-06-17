@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/const/gradient_const.dart';
 import 'package:weather_app/model/weather_model.dart';
@@ -13,9 +14,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future weather;
+  late Future<WeatherModel> weather;
   late WeatherModel weatherData;
   int selectedIndex = 0;
+
+  late Position currentPosition;
+  final currentTime = DateTime.now();
 
   @override
   void initState() {
@@ -55,14 +59,30 @@ class _HomeScreenState extends State<HomeScreen> {
                               right: 10,
                               child: Column(
                                 children: [
-                                  Text(
-                                    (20).toString(),
-                                    style: GoogleFonts.concertOne(
-                                        fontSize: 100, color: Colors.black45),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        (weatherData.main?.temp).toString(),
+                                        style: GoogleFonts.concertOne(
+                                            fontSize: 80,
+                                            color: Colors.black45),
+                                      ),
+                                      Text("°C",
+                                          style: GoogleFonts.concertOne(
+                                              fontSize: 30,
+                                              color: Colors.black45))
+                                    ],
                                   ),
-                                  const Text("feels like 18")
+                                  Text(
+                                      "feels like ${weatherData.main?.feelsLike}")
                                 ],
-                              ))
+                              )),
+                          Positioned(
+                              bottom: 10,
+                              right: 20,
+                              child: Text(currentTime.toString(),
+                                  style: GoogleFonts.saira(
+                                      fontSize: 20, color: Colors.black45)))
                         ],
                       ),
                     ),
@@ -83,12 +103,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           data: '${weatherData.main?.humidity} %'),
                     ],
                   ),
+                  Text("Weather Forecast",
+                      style: GoogleFonts.concertOne(
+                          fontSize: 30, color: Colors.black45)),
+                  Container()
                 ],
               );
             }
             return const Text("no data found");
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
           return const Text("no data found");
         });
@@ -124,7 +148,33 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void getWeather() {
-    weather = WeatherService.getWeather();
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
+
+  Future<void> getWeather() async {
+    currentPosition = await _determinePosition();
+    weather = await WeatherService.getCurrentWeather(currentPosition);
   }
 }
