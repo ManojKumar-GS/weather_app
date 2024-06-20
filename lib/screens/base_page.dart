@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/const/gradient_const.dart';
 import 'package:weather_app/screens/home_screen.dart';
 import 'package:weather_app/screens/search_screen.dart';
 
 class BasePage extends StatefulWidget {
-  const BasePage({super.key});
+  final double latitude;
+  final double longitude;
+  const BasePage({super.key, required this.latitude, required this.longitude});
 
   @override
   State<BasePage> createState() => _BasePageState();
@@ -13,7 +16,13 @@ class BasePage extends StatefulWidget {
 
 class _BasePageState extends State<BasePage> {
   int selectedIndex = 0;
-  static const List screens = [HomeScreen(), SearchScreen()];
+  List screens = [];
+
+  @override
+  void initState() {
+    getScreens();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,5 +72,11 @@ class _BasePageState extends State<BasePage> {
     setState(() {
       selectedIndex = index;
     });
+  }
+
+  void getScreens() {
+    screens.add(
+        HomeScreen(latitude: widget.latitude, longitude: widget.longitude));
+    screens.add(const SearchScreen());
   }
 }

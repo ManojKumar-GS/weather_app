@@ -7,18 +7,20 @@ import 'package:weather_app/model/weather_model.dart';
 import 'package:weather_app/service/weather_service.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final double latitude;
+  final double longitude;
+  const HomeScreen(
+      {super.key, required this.latitude, required this.longitude});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<WeatherModel> weather;
+  late Future<dynamic> weather;
   late WeatherModel weatherData;
   int selectedIndex = 0;
 
-  late Position currentPosition;
   final currentTime = DateTime.now();
 
   @override
@@ -148,33 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    return await Geolocator.getCurrentPosition();
-  }
-
-  Future<void> getWeather() async {
-    currentPosition = await _determinePosition();
-    weather = await WeatherService.getCurrentWeather(currentPosition);
+  void getWeather() {
+    weather = WeatherService.getWeatherBySearch("mysore");
   }
 }
