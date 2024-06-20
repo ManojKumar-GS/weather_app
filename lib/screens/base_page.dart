@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/const/gradient_const.dart';
 import 'package:weather_app/screens/home_screen.dart';
