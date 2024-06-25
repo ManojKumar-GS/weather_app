@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:weather_app/const/gradient_const.dart';
 import 'package:weather_app/model/weather_model.dart';
 import 'package:weather_app/service/weather_service.dart';
@@ -20,12 +24,34 @@ class _HomeScreenState extends State<HomeScreen> {
   late WeatherModel weatherData;
   int selectedIndex = 0;
 
-  final currentTime = DateTime.now();
+  String currentTime = '';
+  late Timer _timer;
 
   @override
   void initState() {
-    getWeather();
     super.initState();
+    getWeather();
+    _updateTime();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void _updateTime() {
+    final DateTime now = DateTime.now();
+    final String formattedTime = DateFormat('hh:mm a EEE d MMM').format(now);
+
+    setState(() {
+      currentTime = formattedTime;
+    });
+
+    _timer = Timer(
+      const Duration(seconds: 1) - Duration(milliseconds: now.millisecond),
+      _updateTime,
+    );
   }
 
   @override
@@ -44,6 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: MediaQuery.of(context).size.height * 0.55,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
+                          image: const DecorationImage(
+                              image: AssetImage('assets/prettyHot.jpg'),
+                              fit: BoxFit.cover),
                           border: Border.all(),
                           borderRadius: BorderRadius.circular(20)),
                       child: Stack(
@@ -75,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ],
                                   ),
                                   Text(
-                                      "feels like ${weatherData.main?.feelsLike}")
+                                      "feels like ${weatherData.main?.feelsLike} °C")
                                 ],
                               )),
                           Positioned(
