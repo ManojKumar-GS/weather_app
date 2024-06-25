@@ -178,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void getWeather() {
-    weather = WeatherService.getWeatherBySearch("mysore");
+    weather = WeatherService.getCurrentWeather(
+        latitude: widget.latitude, longitude: widget.longitude);
   }
 }

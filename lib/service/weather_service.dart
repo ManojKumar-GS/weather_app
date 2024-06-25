@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/model/weather_model.dart';
 
 class WeatherService {
@@ -16,10 +15,11 @@ class WeatherService {
     }
   }
 
-  static getCurrentWeather(Position position) async {
+  static getCurrentWeather(
+      {required double latitude, required double longitude}) async {
     var data = {
-      'lat': position.latitude,
-      'lon': position.longitude,
+      'lat': latitude,
+      'lon': longitude,
       'appid': dotenv.env["api_key"],
       'units': 'metric'
     };
