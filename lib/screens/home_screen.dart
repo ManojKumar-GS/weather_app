@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               right: 20,
                               child: Text(currentTime.toString(),
                                   style: GoogleFonts.saira(
-                                      fontSize: 20, color: Colors.black45)))
+                                      fontSize: 20, color: Colors.black)))
                         ],
                       ),
                     ),
@@ -135,6 +135,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text("Weather Forecast",
                       style: GoogleFonts.concertOne(
                           fontSize: 30, color: Colors.black45)),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: const Divider(
+                      color: Colors.black45,
+                    ),
+                  ),
                   Container()
                 ],
               );
