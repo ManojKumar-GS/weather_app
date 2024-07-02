@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +26,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String currentTime = '';
   late Timer _timer;
-  String imagePath = "assets/img2.jpg";
+  String imagePath = "assets/img2.png";
 
   @override
   void initState() {
     super.initState();
+    int num = Random().nextInt(3) + 1;
+    imagePath = "assets/img$num.png";
     getWeather();
     _updateTime();
   }
@@ -70,9 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: MediaQuery.of(context).size.height * 0.55,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                          image: const DecorationImage(
-                              image: AssetImage('assets/img2.jpg'),
-                              fit: BoxFit.cover),
+                          image: DecorationImage(
+                              image: AssetImage(imagePath), fit: BoxFit.cover),
                           border: Border.all(),
                           borderRadius: BorderRadius.circular(20)),
                       child: Stack(
@@ -146,11 +148,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               );
             }
-            return const Text("no data found");
+            return const Center(child: Text("no data found"));
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-          return const Text("no data found");
+          return const Center(child: Text("no data found"));
         });
   }
 
