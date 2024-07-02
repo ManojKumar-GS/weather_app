@@ -25,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String currentTime = '';
   late Timer _timer;
+  String imagePath = "assets/img2.jpg";
 
   @override
   void initState() {
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                           image: const DecorationImage(
-                              image: AssetImage('assets/prettyHot.jpg'),
+                              image: AssetImage('assets/img2.jpg'),
                               fit: BoxFit.cover),
                           border: Border.all(),
                           borderRadius: BorderRadius.circular(20)),
