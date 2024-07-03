@@ -44,7 +44,7 @@ A mobile application developed using Flutter to display weather data fetched fro
 
 ## Dependencies
 
-- [http](https://pub.dev/packages/http): For making HTTP requests to the OpenWeather API
+- [dio](https://pub.dev/packages/dio): For making HTTP requests to the OpenWeather API
 - [flutter_dotenv](https://pub.dev/packages/flutter_dotenv): For loading environment variables from a `.env` file
 - [geolocator](https://pub.dev/packages/geolocator): For accessing the user's location
 
