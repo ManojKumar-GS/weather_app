@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:weather_app/screens/exp.dart';
 import 'package:weather_app/service/weather_service.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -49,6 +50,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       icon: const Icon(Icons.search_outlined))),
             ),
           ),
+          /*ElevatedButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => Forecast()));
+              },
+              child: Icon(Icons.abc)),*/
           isDataReceived
               ? FutureBuilder(
                   future: weatherData,
@@ -71,47 +78,41 @@ class _SearchScreenState extends State<SearchScreen> {
                               color: Colors.black45,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Card(
-                              elevation: 0,
-                              color: Colors.transparent,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        (weather.main?.temp).toString(),
-                                        style: GoogleFonts.concertOne(
-                                            fontSize: 80,
-                                            color: Colors.black45),
-                                      ),
-                                      Text("°C",
-                                          style: GoogleFonts.concertOne(
-                                              fontSize: 30,
-                                              color: Colors.black45))
-                                    ],
-                                  ),
-                                  const SizedBox(width: 30),
-                                  Expanded(
-                                    child: Text(
-                                        weather.weather[0].description ?? "",
-                                        style: GoogleFonts.alatsi(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.w800)),
-                                  ),
-                                ],
-                              ),
+                          Card(
+                            elevation: 0,
+                            color: Colors.transparent,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  (weather.main?.temp).toString(),
+                                  style: GoogleFonts.concertOne(
+                                      fontSize: 80, color: Colors.black45),
+                                ),
+                                Text("°C",
+                                    style: GoogleFonts.concertOne(
+                                        fontSize: 30, color: Colors.black45)),
+                                const SizedBox(width: 30),
+                                Expanded(
+                                  child: Text(
+                                      weather.weather[0].description ?? "",
+                                      style: GoogleFonts.alatsi(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w800)),
+                                ),
+                              ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Text("Weather Details",
-                                style: GoogleFonts.alatsi(
-                                    fontSize: 25, fontWeight: FontWeight.w800)),
+                          SizedBox(
+                            height: 150,
+                            width: 150,
+                            child: Image.network(
+                                "http://openweathermap.org/img/w/${weather.weather[0].icon}.png",
+                                fit: BoxFit.contain),
                           ),
+                          Text("Weather Details",
+                              style: GoogleFonts.alatsi(
+                                  fontSize: 25, fontWeight: FontWeight.w800)),
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.75,
                             child: const Divider(
