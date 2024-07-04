@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,13 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String currentTime = '';
   late Timer _timer;
-  String imagePath = "assets/img2.png";
 
   @override
   void initState() {
     super.initState();
-    int num = Random().nextInt(3) + 1;
-    imagePath = "assets/img$num.png";
     getWeather();
     _updateTime();
   }
@@ -70,59 +66,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 weatherData = snapshot.data!;
                 return Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.55,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(imagePath),
-                                fit: BoxFit.cover),
-                            border: Border.all(),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Stack(
-                          children: [
-                            Align(
-                                alignment: Alignment.topCenter,
-                                child: Text(
-                                  weatherData.name ?? "",
-                                  style: GoogleFonts.alatsi(
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.w900),
-                                )),
-                            Positioned(
-                                top: 50,
-                                right: 10,
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          (weatherData.main?.temp).toString(),
-                                          style: GoogleFonts.concertOne(
-                                              fontSize: 80,
-                                              color: Colors.black45),
-                                        ),
-                                        Text("°C",
-                                            style: GoogleFonts.concertOne(
-                                                fontSize: 30,
-                                                color: Colors.black45))
-                                      ],
-                                    ),
-                                    Text(
-                                        "feels like ${weatherData.main?.feelsLike} °C")
-                                  ],
-                                )),
-                            Positioned(
-                                bottom: 10,
-                                right: 20,
-                                child: Text(currentTime.toString(),
-                                    style: GoogleFonts.saira(
-                                        fontSize: 20, color: Colors.black)))
-                          ],
+                    Text(
+                      weatherData.name ?? "",
+                      style: GoogleFonts.alatsi(
+                          fontSize: 40, fontWeight: FontWeight.w900),
+                    ),
+                    Text(currentTime.toString(),
+                        style: GoogleFonts.saira(
+                            fontSize: 20, color: Colors.black)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 150,
+                          width: 150,
+                          child: Image.network(
+                              "http://openweathermap.org/img/w/${weatherData.weather?[0].icon}.png",
+                              fit: BoxFit.contain),
                         ),
-                      ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  (weatherData.main?.temp).toString(),
+                                  style: GoogleFonts.concertOne(
+                                      fontSize: 80, color: Colors.black45),
+                                ),
+                                Text("°C",
+                                    style: GoogleFonts.concertOne(
+                                        fontSize: 30, color: Colors.black45))
+                              ],
+                            ),
+                            Text("feels like ${weatherData.main?.feelsLike} °C")
+                          ],
+                        )
+                      ],
                     ),
                     Row(
                       children: [
@@ -184,34 +163,58 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: GoogleFonts.concertOne(
                               fontSize: 20, color: Colors.black)),
                     ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        return Card(
-                          // shape: const RoundedRectangleBorder(),
-                          elevation: 0.2,
-                          color: Colors.transparent,
-                          child: ListTile(
-                            trailing: Text(
-                                forecast.list?[index].main.temp.toString() ??
-                                    "",
-                                style: GoogleFonts.concertOne(
-                                    fontSize: 30, color: Colors.black)),
-                            title: Text(
-                                forecast.list?[index].weather[index]
-                                        .description ??
-                                    "",
-                                style: GoogleFonts.actor(
-                                    fontSize: 30, color: Colors.black)),
-                            subtitle: Text(forecast.list?[index].dtTxt ?? "",
-                                style: GoogleFonts.aBeeZee(
-                                    fontSize: 20, color: Colors.black)),
-                            leading: const Icon(Icons.sunny, size: 40),
-                          ),
-                        );
-                      },
+                    SizedBox(
+                      height: 220,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: 8,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            margin: const EdgeInsets.all(10),
+                            elevation: 0.2,
+                            color: Colors.transparent,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.network(
+                                    "http://openweathermap.org/img/w/10d.png"),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 10.0, left: 10),
+                                  child: Text(
+                                      forecast.list?[index].main.temp
+                                              .toString() ??
+                                          "",
+                                      style: GoogleFonts.concertOne(
+                                          fontSize: 25, color: Colors.black45)),
+                                ),
+                                SizedBox(
+                                  width: 50,
+                                  child: Text(
+                                    forecast.list?[index].weather[index]
+                                            .description ??
+                                        "",
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.justify,
+                                    style: GoogleFonts.alef(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ),
+                                Text(forecast.list?[index].dtTxt ?? "",
+                                    style: GoogleFonts.aBeeZee(
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w900)),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ],
                 );
