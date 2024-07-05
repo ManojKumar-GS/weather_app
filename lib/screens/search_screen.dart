@@ -79,6 +79,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           ),
                           Card(
+                            margin: const EdgeInsets.only(left: 20),
                             elevation: 0,
                             color: Colors.transparent,
                             child: Row(
