@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_app/screens/exp.dart';
+import 'package:weather_app/screens/weather_forecast_screen.dart';
 import 'package:weather_app/service/weather_service.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -12,7 +12,6 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController textEditingController = TextEditingController();
-  late Future<dynamic> weatherData;
   bool isDataReceived = false;
   @override
   Widget build(BuildContext context) {
@@ -50,15 +49,15 @@ class _SearchScreenState extends State<SearchScreen> {
                       icon: const Icon(Icons.search_outlined))),
             ),
           ),
-          /*ElevatedButton(
+          ElevatedButton(
               onPressed: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => Forecast()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const ForecastUi()));
               },
-              child: Icon(Icons.abc)),*/
+              child: Icon(Icons.abc)),
           isDataReceived
               ? FutureBuilder(
-                  future: weatherData,
+                  future: getWeatherData(textEditingController.text),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (!snapshot.hasData) {
@@ -96,7 +95,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 const SizedBox(width: 30),
                                 Expanded(
                                   child: Text(
-                                      weather.weather[0].description ?? "",
+                                      weather.weather?[0].description ?? "",
                                       style: GoogleFonts.alatsi(
                                           fontSize: 25,
                                           fontWeight: FontWeight.w800)),
@@ -108,7 +107,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             height: 150,
                             width: 150,
                             child: Image.network(
-                                "http://openweathermap.org/img/w/${weather.weather[0].icon}.png",
+                                "http://openweathermap.org/img/w/${weather.weather?[0].icon}.png",
                                 fit: BoxFit.contain),
                           ),
                           Text("Weather Details",
@@ -167,7 +166,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  getWeatherData(String location) {
-    weatherData = WeatherService.getWeatherBySearch(location);
+  Future<dynamic> getWeatherData(String location) {
+    return WeatherService.getWeatherBySearch(location);
   }
 }
