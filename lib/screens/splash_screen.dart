@@ -20,8 +20,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     getPosition();
-    // Timer(const Duration(seconds: 2),
-    //     () => Get.off(BasePage(position: currentPosition)));
     super.initState();
   }
 
@@ -62,8 +60,8 @@ class _SplashScreenState extends State<SplashScreen> {
         builder: (BuildContext context, AsyncSnapshot<Position> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
-              decoration: BoxDecoration(
-                  gradient: GradientConst.gradientBackground.value),
+              decoration:
+                  BoxDecoration(gradient: GradientConst.gradientBackground),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

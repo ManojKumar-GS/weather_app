@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class GradientConst {
   static const List<Color> gradientColor = [
@@ -11,14 +10,13 @@ class GradientConst {
     Colors.white54,
     Colors.grey,
   ];
-  static Rx<LinearGradient> gradientBackground = const LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: GradientConst.gradientColor)
-      .obs;
-  static Rx<LinearGradient> gradientCardBackground = const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: GradientConst.gradientCardColor)
-      .obs;
+  static LinearGradient gradientBackground = const LinearGradient(
+      begin: Alignment.topRight,
+      end: Alignment.bottomLeft,
+      colors: GradientConst.gradientColor);
+
+  static LinearGradient gradientCardBackground = const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: GradientConst.gradientCardColor);
 }

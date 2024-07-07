@@ -229,7 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontSize: 20, color: Colors.black)),
                     ),
                     ListView.builder(
-                      physics: ScrollPhysics(),
+                      physics: const ScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: todayList.length,
                       scrollDirection: Axis.vertical,
@@ -277,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  gradient: GradientConst.gradientCardBackground.value),
+                  gradient: GradientConst.gradientCardBackground),
               height: 100,
               width: 80,
               child: Column(

@@ -27,8 +27,7 @@ class _BasePageState extends State<BasePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        decoration:
-            BoxDecoration(gradient: GradientConst.gradientBackground.value),
+        decoration: BoxDecoration(gradient: GradientConst.gradientBackground),
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: screens[selectedIndex],
