@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:weather_app/const/gradient_const.dart';
 import 'package:weather_app/model/forecast_model.dart';
 import 'package:weather_app/model/weather_model.dart';
+import 'package:weather_app/screens/weather_forecast_screen.dart';
 import 'package:weather_app/service/weather_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,16 +23,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<dynamic> weather;
   late WeatherModel weatherData;
-  int selectedIndex = 0;
-  Forecast forecast = Forecast();
+  late Future<dynamic> forecast;
+  late Forecast forecastData;
+  List todayList = [];
 
   String currentTime = '';
+  String todayDate = "";
   late Timer _timer;
 
   @override
   void initState() {
     super.initState();
     getWeather();
+    getWeatherForecast();
     _updateTime();
   }
 
@@ -44,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _updateTime() {
     final DateTime now = DateTime.now();
     final String formattedTime = DateFormat('hh:mm a EEE d MMM').format(now);
+    todayDate = DateFormat('EEE d MMM').format(now);
 
     setState(() {
       currentTime = formattedTime;
@@ -55,166 +60,199 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  getTodayWeatherForecast() {
+    forecastData.list?.forEach((element) {
+      if (DateFormat('EEE d MMM')
+              .format(DateTime.parse(element.dtTxt.substring(0, 10))) ==
+          todayDate) {
+        todayList.add({
+          'icon': element.weather[0].icon,
+          'desc': element.weather[0].description,
+          'temp': element.main.temp,
+          'time': DateFormat('hh:mm').format(DateTime.parse(element.dtTxt))
+        });
+      }
+    });
+    print(todayList[0]['icon']);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: FutureBuilder(
-          future: weather,
+      child: Column(
+        children: [
+          FutureBuilder(
+              future: weather,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    weatherData = snapshot.data!;
+                    return Column(
+                      children: [
+                        Text(
+                          weatherData.name ?? "",
+                          style: GoogleFonts.alatsi(
+                              fontSize: 40, fontWeight: FontWeight.w900),
+                        ),
+                        Text(currentTime.toString(),
+                            style: GoogleFonts.saira(
+                                fontSize: 20, color: Colors.black)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              height: 150,
+                              width: 150,
+                              child: Image.network(
+                                  "http://openweathermap.org/img/w/${weatherData.weather?[0].icon}.png",
+                                  fit: BoxFit.contain),
+                            ),
+                            Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      (weatherData.main?.temp).toString(),
+                                      style: GoogleFonts.concertOne(
+                                          fontSize: 80, color: Colors.black45),
+                                    ),
+                                    Text("°C",
+                                        style: GoogleFonts.concertOne(
+                                            fontSize: 30,
+                                            color: Colors.black45))
+                                  ],
+                                ),
+                                Text(
+                                    "feels like ${weatherData.main?.feelsLike} °C")
+                              ],
+                            )
+                          ],
+                        ),
+                        Text(
+                          (weatherData.weather?[0].description).toString(),
+                          style: GoogleFonts.concertOne(
+                              fontSize: 80, color: Colors.black),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10.0),
+                          child: Text("Weather Details",
+                              style: GoogleFonts.alatsi(
+                                  fontSize: 25, fontWeight: FontWeight.w800)),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.75,
+                          child: const Divider(
+                            color: Colors.black45,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            buildCards(
+                                icon: Icons.air,
+                                name: "Wind",
+                                data: '${weatherData.wind?.speed} Km/hr'),
+                            buildCards(
+                                icon: CupertinoIcons.thermometer,
+                                name: "Pressure",
+                                data: '${weatherData.main?.pressure} MB'),
+                            buildCards(
+                                icon: CupertinoIcons.drop,
+                                name: "Humidity",
+                                data: '${weatherData.main?.humidity} %'),
+                          ],
+                        ),
+                      ],
+                    );
+                  }
+                  return const Center(child: Text("no data found"));
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return const Center(child: Text("no data found"));
+              }),
+          weatherForecast()
+        ],
+      ),
+    );
+  }
+
+  Widget weatherForecast() {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("Weather Forecast",
+                style: GoogleFonts.concertOne(
+                    fontSize: 30, color: Colors.black45)),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ForecastUi(forecastData: forecastData)));
+                  },
+                  icon: const Icon(
+                    CupertinoIcons.right_chevron,
+                    color: Colors.black,
+                  )),
+            )
+          ],
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.75,
+          child: const Divider(
+            color: Colors.black45,
+          ),
+        ),
+        FutureBuilder(
+          future: forecast,
+          initialData: Forecast(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasData) {
-                weatherData = snapshot.data!;
+                forecastData = snapshot.data!;
+                if (todayList.isEmpty) {
+                  getTodayWeatherForecast();
+                }
                 return Column(
                   children: [
-                    Text(
-                      weatherData.name ?? "",
-                      style: GoogleFonts.alatsi(
-                          fontSize: 40, fontWeight: FontWeight.w900),
-                    ),
-                    Text(currentTime.toString(),
-                        style: GoogleFonts.saira(
-                            fontSize: 20, color: Colors.black)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 150,
-                          width: 150,
-                          child: Image.network(
-                              "http://openweathermap.org/img/w/${weatherData.weather?[0].icon}.png",
-                              fit: BoxFit.contain),
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  (weatherData.main?.temp).toString(),
-                                  style: GoogleFonts.concertOne(
-                                      fontSize: 80, color: Colors.black45),
-                                ),
-                                Text("°C",
-                                    style: GoogleFonts.concertOne(
-                                        fontSize: 30, color: Colors.black45))
-                              ],
-                            ),
-                            Text("feels like ${weatherData.main?.feelsLike} °C")
-                          ],
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        buildCards(
-                            icon: Icons.air,
-                            name: "Wind",
-                            data: '${weatherData.wind?.speed} Km/hr'),
-                        buildCards(
-                            icon: CupertinoIcons.thermometer,
-                            name: "Pressure",
-                            data: '${weatherData.main?.pressure} MB'),
-                        buildCards(
-                            icon: CupertinoIcons.drop,
-                            name: "Humidity",
-                            data: '${weatherData.main?.humidity} %'),
-                      ],
-                    ),
-                    Text("Weather Forecast",
-                        style: GoogleFonts.concertOne(
-                            fontSize: 30, color: Colors.black45)),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.75,
-                      child: const Divider(
-                        color: Colors.black45,
-                      ),
-                    ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
-                      child: Text("Next 3hr Forecast",
+                      child: Text("Today's weather forecast",
                           style: GoogleFonts.concertOne(
                               fontSize: 20, color: Colors.black)),
                     ),
                     ListView.builder(
+                      physics: ScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: 3,
+                      itemCount: todayList.length,
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
                         return Card(
                           elevation: 0.2,
                           color: Colors.transparent,
                           child: ListTile(
-                            trailing: Text("25°C",
+                            trailing: Text(todayList[index]['temp'].toString(),
                                 style: GoogleFonts.concertOne(
                                     fontSize: 30, color: Colors.black)),
-                            title: Text("Rainy",
+                            title: Text(todayList[index]['desc'],
                                 style: GoogleFonts.actor(
                                     fontSize: 30, color: Colors.black)),
-                            subtitle: Text("21:30",
+                            subtitle: Text(todayList[index]['temp'].toString(),
                                 style: GoogleFonts.aBeeZee(
                                     fontSize: 20, color: Colors.black)),
-                            leading: const Icon(Icons.sunny, size: 40),
+                            leading: Image.network(
+                              "http://openweathermap.org/img/w/${todayList[index]['icon']}.png",
+                            ),
                           ),
                         );
                       },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Text("Next 5 days Forecast",
-                          style: GoogleFonts.concertOne(
-                              fontSize: 20, color: Colors.black)),
-                    ),
-                    SizedBox(
-                      height: 220,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: 8,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            margin: const EdgeInsets.all(10),
-                            elevation: 0.2,
-                            color: Colors.transparent,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.network(
-                                    "http://openweathermap.org/img/w/10d.png"),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 10.0, left: 10),
-                                  child: Text(
-                                      forecast.list?[index].main.temp
-                                              .toString() ??
-                                          "",
-                                      style: GoogleFonts.concertOne(
-                                          fontSize: 25, color: Colors.black45)),
-                                ),
-                                SizedBox(
-                                  width: 50,
-                                  child: Text(
-                                    forecast.list?[index].weather[index]
-                                            .description ??
-                                        "",
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.justify,
-                                    style: GoogleFonts.alef(
-                                      fontSize: 20,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w900,
-                                    ),
-                                  ),
-                                ),
-                                Text(forecast.list?[index].dtTxt ?? "",
-                                    style: GoogleFonts.aBeeZee(
-                                        fontSize: 15,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w900)),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
                     ),
                   ],
                 );
@@ -224,7 +262,9 @@ class _HomeScreenState extends State<HomeScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             return const Center(child: Text("no data found"));
-          }),
+          },
+        ),
+      ],
     );
   }
 
@@ -260,6 +300,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void getWeather() {
     weather = WeatherService.getCurrentWeather(
+        latitude: widget.latitude, longitude: widget.longitude);
+  }
+
+  void getWeatherForecast() {
+    forecast = WeatherService.getWeatherForecast(
         latitude: widget.latitude, longitude: widget.longitude);
   }
 }
