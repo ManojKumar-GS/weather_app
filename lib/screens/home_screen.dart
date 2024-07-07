@@ -238,13 +238,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           elevation: 0.2,
                           color: Colors.transparent,
                           child: ListTile(
-                            trailing: Text(todayList[index]['temp'].toString(),
+                            trailing: Text('${todayList[index]['temp']}°C',
                                 style: GoogleFonts.concertOne(
                                     fontSize: 30, color: Colors.black)),
                             title: Text(todayList[index]['desc'],
                                 style: GoogleFonts.actor(
                                     fontSize: 30, color: Colors.black)),
-                            subtitle: Text(todayList[index]['temp'].toString(),
+                            subtitle: Text(todayList[index]['time'].toString(),
                                 style: GoogleFonts.aBeeZee(
                                     fontSize: 20, color: Colors.black)),
                             leading: Image.network(
