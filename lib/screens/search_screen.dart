@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_app/screens/weather_forecast_screen.dart';
 import 'package:weather_app/service/weather_service.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -49,12 +48,6 @@ class _SearchScreenState extends State<SearchScreen> {
                       icon: const Icon(Icons.search_outlined))),
             ),
           ),
-          ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const ForecastUi()));
-              },
-              child: Icon(Icons.abc)),
           isDataReceived
               ? FutureBuilder(
                   future: getWeatherData(textEditingController.text),
