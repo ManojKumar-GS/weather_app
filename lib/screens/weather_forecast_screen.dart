@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/const/gradient_const.dart';
 import 'package:weather_app/model/forecast_model.dart';
 
 class ForecastUi extends StatefulWidget {
@@ -12,13 +13,16 @@ class ForecastUi extends StatefulWidget {
 }
 
 class _ForecastUiState extends State<ForecastUi> {
-  final Forecast forecastData = Forecast();
+  late Forecast forecastData;
   List<String> dateList = [];
-  List todayList = [];
+  List dailyForecast = [];
 
   @override
   initState() {
-    getDataList();
+    forecastData = widget.forecastData;
+    if (dateList.isEmpty) {
+      getDataList();
+    }
     super.initState();
   }
 
@@ -38,40 +42,55 @@ class _ForecastUiState extends State<ForecastUi> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-          body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: Text("Weather Forecast",
-                  style: GoogleFonts.concertOne(
-                      fontSize: 30, color: Colors.black45)),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.75,
-              child: const Divider(
-                color: Colors.black45,
+      child: Container(
+        decoration: BoxDecoration(gradient: GradientConst.gradientBackground),
+        child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              title: Column(
+                children: [
+                  Text(
+                    "Weather Forecast",
+                    style: GoogleFonts.concertOne(
+                        fontSize: 25, color: Colors.black45),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: const Divider(
+                      color: Colors.black45,
+                    ),
+                  ),
+                ],
               ),
             ),
-            IconButton(onPressed: () {}, icon: Icon(Icons.access_alarm)),
-            ListView.builder(
-                physics: const ScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 5,
-                scrollDirection: Axis.vertical,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      Text(dateList[index],
-                          style: GoogleFonts.concertOne(
-                              fontSize: 30, color: Colors.black45)),
-                      forecastWidget(),
-                    ],
-                  );
-                }),
-          ],
-        ),
-      )),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        getTodayWeatherForecast();
+                      },
+                      icon: Icon(Icons.access_alarm)),
+                  ListView.builder(
+                      physics: const ScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: 5,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Column(
+                          children: [
+                            Text(dateList[index],
+                                style: GoogleFonts.concertOne(
+                                    fontSize: 30, color: Colors.black45)),
+                            forecastWidget(),
+                          ],
+                        );
+                      }),
+                ],
+              ),
+            )),
+      ),
     );
   }
 

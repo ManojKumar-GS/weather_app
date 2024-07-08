@@ -79,8 +79,8 @@ class _SplashScreenState extends State<SplashScreen> {
             );
           }
           return BasePage(
-              latitude: snapshot.data!.latitude,
-              longitude: snapshot.data!.longitude);
+              latitude: snapshot.data?.latitude ?? 12.2958,
+              longitude: snapshot.data?.longitude ?? 76.6394);
         },
       ),
     );
