@@ -73,13 +73,14 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     });
-    print(todayList[0]['icon']);
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           FutureBuilder(
               future: weather,
@@ -164,12 +165,32 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     );
                   }
-                  return const Center(child: Text("no data found"));
+                  return Column(
+                    children: [
+                      Image.asset(
+                        "assets/noData1.png",
+                      ),
+                      Text("Weather Data Found",
+                          style: GoogleFonts.alatsi(
+                              fontSize: 18, fontWeight: FontWeight.w800)),
+                    ],
+                  );
                 } else if (snapshot.connectionState ==
                     ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Align(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator());
                 }
-                return const Center(child: Text("no data found"));
+                return Column(
+                  children: [
+                    Image.asset(
+                      "assets/noData1.png",
+                    ),
+                    Text("Weather Data Found",
+                        style: GoogleFonts.alatsi(
+                            fontSize: 18, fontWeight: FontWeight.w800)),
+                  ],
+                );
               }),
           weatherForecast()
         ],
@@ -257,11 +278,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 );
               }
-              return const Center(child: Text("no data found"));
+              return Column(
+                children: [
+                  Image.asset(
+                    "assets/noData2.png",
+                  ),
+                  Text("Forecast not found",
+                      style: GoogleFonts.alatsi(
+                          fontSize: 18, fontWeight: FontWeight.w800)),
+                ],
+              );
             } else if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-            return const Center(child: Text("no data found"));
+            return Column(
+              children: [
+                Image.asset(
+                  "assets/noData2.png",
+                ),
+                Text("Forecast not found",
+                    style: GoogleFonts.alatsi(
+                        fontSize: 18, fontWeight: FontWeight.w800)),
+              ],
+            );
           },
         ),
       ],
