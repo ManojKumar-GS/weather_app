@@ -5,21 +5,25 @@ import 'package:weather_app/const/gradient_const.dart';
 import 'package:weather_app/model/forecast_model.dart';
 
 class ForecastUi extends StatefulWidget {
-  final Forecast forecastData;
-  const ForecastUi({super.key, required this.forecastData});
+  final Forecast? forecastData;
+  const ForecastUi({super.key, this.forecastData});
 
   @override
   State<ForecastUi> createState() => _ForecastUiState();
 }
 
 class _ForecastUiState extends State<ForecastUi> {
-  late Forecast forecastData;
+  Forecast? forecastData;
   List<String> dateList = [];
   List dailyForecast = [];
+  bool isDataAvailable = false;
 
   @override
   initState() {
-    forecastData = widget.forecastData;
+    if (widget.forecastData != null) {
+      isDataAvailable = true;
+      forecastData = widget.forecastData ?? Forecast();
+    }
     if (dateList.isEmpty) {
       getDataList();
     }
@@ -29,7 +33,7 @@ class _ForecastUiState extends State<ForecastUi> {
   getDataList() {
     String value = "";
     String value1 = "";
-    (forecastData.list ?? []).forEach((element) {
+    (forecastData?.list ?? []).forEach((element) {
       value = element.dtTxt.substring(0, 10);
 
       if (value != value1) {
@@ -65,25 +69,38 @@ class _ForecastUiState extends State<ForecastUi> {
               ),
             ),
             body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListView.builder(
-                      physics: const ScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: 5,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Column(
-                          children: [
-                            Text(dateList[index],
-                                style: GoogleFonts.concertOne(
-                                    fontSize: 30, color: Colors.black45)),
-                            forecastWidget(),
-                          ],
-                        );
-                      }),
-                ],
-              ),
+              child: isDataAvailable
+                  ? Column(
+                      children: [
+                        ListView.builder(
+                            physics: const ScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: 5,
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Column(
+                                children: [
+                                  Text(dateList[index],
+                                      style: GoogleFonts.concertOne(
+                                          fontSize: 30, color: Colors.black45)),
+                                  forecastWidget(),
+                                ],
+                              );
+                            }),
+                      ],
+                    )
+                  : Center(
+                      child: Column(
+                        children: [
+                          Image.asset(
+                            "assets/noData2.png",
+                          ),
+                          Text("Forecast not found",
+                              style: GoogleFonts.alatsi(
+                                  fontSize: 18, fontWeight: FontWeight.w800)),
+                        ],
+                      ),
+                    ),
             )),
       ),
     );
@@ -105,11 +122,11 @@ class _ForecastUiState extends State<ForecastUi> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Image.network(
-                    "http://openweathermap.org/img/w/${forecastData.list?[index].weather[0].icon}.png"),
+                    "http://openweathermap.org/img/w/${forecastData?.list?[index].weather[0].icon}.png"),
                 Padding(
                   padding: const EdgeInsets.only(right: 10.0, left: 10),
                   child: Text(
-                      (forecastData.list?[index].main.temp ?? 0).toString(),
+                      (forecastData?.list?[index].main.temp ?? 0).toString(),
                       style: GoogleFonts.concertOne(
                           fontSize: 25, color: Colors.black45)),
                 ),
@@ -118,7 +135,7 @@ class _ForecastUiState extends State<ForecastUi> {
                   child: SizedBox(
                     width: 60,
                     child: Text(
-                      forecastData.list?[index].weather[0].description ?? "",
+                      forecastData?.list?[index].weather[0].description ?? "",
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.justify,
@@ -132,7 +149,7 @@ class _ForecastUiState extends State<ForecastUi> {
                 ),
                 Text(
                     DateFormat('hh:mm').format(
-                        DateTime.parse(forecastData.list?[index].dtTxt ?? "")),
+                        DateTime.parse(forecastData?.list?[index].dtTxt ?? "")),
                     style: GoogleFonts.aBeeZee(
                         fontSize: 15,
                         color: Colors.black,

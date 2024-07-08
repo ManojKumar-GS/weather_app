@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<dynamic> weather;
   late WeatherModel weatherData;
   late Future<dynamic> forecast;
-  late Forecast forecastData;
+  Forecast? forecastData;
   List todayList = [];
 
   String currentTime = '';
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getTodayWeatherForecast() {
-    forecastData.list?.forEach((element) {
+    forecastData?.list?.forEach((element) {
       if (DateFormat('EEE d MMM')
               .format(DateTime.parse(element.dtTxt.substring(0, 10))) ==
           todayDate) {
