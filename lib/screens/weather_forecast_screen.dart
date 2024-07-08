@@ -67,11 +67,6 @@ class _ForecastUiState extends State<ForecastUi> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  IconButton(
-                      onPressed: () {
-                        getTodayWeatherForecast();
-                      },
-                      icon: Icon(Icons.access_alarm)),
                   ListView.builder(
                       physics: const ScrollPhysics(),
                       shrinkWrap: true,
