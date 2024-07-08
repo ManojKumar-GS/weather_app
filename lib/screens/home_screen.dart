@@ -170,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Image.asset(
                         "assets/noData1.png",
                       ),
-                      Text("Weather Data Found",
+                      Text("Weather Data Not Found",
                           style: GoogleFonts.alatsi(
                               fontSize: 18, fontWeight: FontWeight.w800)),
                     ],
@@ -186,7 +186,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Image.asset(
                       "assets/noData1.png",
                     ),
-                    Text("Weather Data Found",
+                    Text("Weather Data Not Found",
                         style: GoogleFonts.alatsi(
                             fontSize: 18, fontWeight: FontWeight.w800)),
                   ],
