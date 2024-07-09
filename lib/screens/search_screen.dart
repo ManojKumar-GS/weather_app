@@ -54,7 +54,16 @@ class _SearchScreenState extends State<SearchScreen> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (!snapshot.hasData) {
-                        return const Text("No data found");
+                        return Column(
+                          children: [
+                            Image.asset(
+                              "assets/noData2.png",
+                            ),
+                            Text("No data found",
+                                style: GoogleFonts.alatsi(
+                                    fontSize: 18, fontWeight: FontWeight.w800)),
+                          ],
+                        );
                       }
                       final weather = snapshot.data!;
                       return Column(
@@ -136,10 +145,28 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: CircularProgressIndicator(),
                       );
                     } else {
-                      return const Text("no data found");
+                      return Column(
+                        children: [
+                          Image.asset(
+                            "assets/noData2.png",
+                          ),
+                          Text("No data found",
+                              style: GoogleFonts.alatsi(
+                                  fontSize: 18, fontWeight: FontWeight.w800)),
+                        ],
+                      );
                     }
                   })
-              : const SizedBox()
+              : Column(
+                  children: [
+                    Image.asset(
+                      "assets/search.png",
+                    ),
+                    Text("Search By Location Name",
+                        style: GoogleFonts.alatsi(
+                            fontSize: 18, fontWeight: FontWeight.w800)),
+                  ],
+                )
         ],
       ),
     );
