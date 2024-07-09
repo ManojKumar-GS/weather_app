@@ -90,6 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     weatherData = snapshot.data!;
                     return Column(
                       children: [
+                        const SizedBox(height: 20),
                         Text(
                           weatherData.name ?? "",
                           style: GoogleFonts.alatsi(
@@ -124,15 +125,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 ),
                                 Text(
-                                    "feels like ${weatherData.main?.feelsLike} °C")
+                                  "feels like ${weatherData.main?.feelsLike} °C",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20),
+                                )
                               ],
                             )
                           ],
                         ),
-                        Text(
-                          (weatherData.weather?[0].description).toString(),
-                          style: GoogleFonts.concertOne(
-                              fontSize: 80, color: Colors.black),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 20.0, bottom: 20),
+                          child: Text(
+                            (weatherData.weather?[0].description).toString(),
+                            style: GoogleFonts.concertOne(
+                                height: 1, fontSize: 80, color: Colors.black),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10.0),
