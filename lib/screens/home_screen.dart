@@ -105,9 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(
                               height: 150,
                               width: 150,
-                              child: Image.network(
-                                  "http://openweathermap.org/img/w/${weatherData.weather?[0].icon}.png",
-                                  fit: BoxFit.contain),
+                              child: getIcon(),
                             ),
                             Column(
                               children: [
@@ -140,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             (weatherData.weather?[0].description).toString(),
                             style: GoogleFonts.concertOne(
-                                height: 1, fontSize: 80, color: Colors.black),
+                                height: 1, fontSize: 80, color: Colors.black45),
                           ),
                         ),
                         Padding(
@@ -344,6 +342,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ))),
     );
+  }
+
+  Widget getIcon() {
+    try {
+      return Image.network(
+          "http://openweathermap.org/img/w/${weatherData.weather?[0].icon}.png",
+          fit: BoxFit.contain);
+    } catch (e) {
+      return Icon(CupertinoIcons.refresh);
+    }
   }
 
   void getWeather() {
